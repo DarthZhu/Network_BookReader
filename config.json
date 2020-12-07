@@ -1,0 +1,14 @@
+{
+    "server": {
+        "ip": "127.0.0.1",
+        "port": 65432
+    },
+    "client": {
+        "server_ip": "127.0.0.1",
+        "server_port": 65432
+    },
+    "packet": {
+        "size": 4096,
+        "format": "utf-8"
+    }
+}
