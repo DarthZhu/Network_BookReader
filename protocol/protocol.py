@@ -14,15 +14,17 @@ class MessageType(enum.IntEnum):
     send_chapter = 4
     send_book = 5
     send_book_done = 6
+    page_num = 7
+    total_page = 8
+    chap_list = 9
 
     # Client Action
     login = 101
-    donwload = 102
+    download = 102
     read = 103
     require_page = 104
     require_list = 105
-    require_chapter = 106
-    update_bookmark = 107
+    update_bookmark = 106
 
     # Failure
     login_fail = 201
@@ -46,5 +48,21 @@ class packet:
         """
         msg = msg.decode(config["packet"]["format"])
         self.mt = MessageType(int(msg[:3]))
+        self.data = msg[3:]
+        return self
+    
+    def to_message_no_encode(self):
+        """Turn packet into a string without encode
+        """
+        msg = str(self.mt.value)
+        msg = '0' * (3 - len(msg)) + msg
+        msg = msg.encode(config["packet"]["format"])
+        msg += self.data
+        return msg
+
+    def to_packet_no_decode(self, msg):
+        """Turn message into packet
+        """
+        self.mt = MessageType(int(msg[:3].decode(config["packet"]["format"])))
         self.data = msg[3:]
         return self

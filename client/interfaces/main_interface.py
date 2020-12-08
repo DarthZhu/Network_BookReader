@@ -1,6 +1,8 @@
+from client.interfaces.read_interface import ReaderForm
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
+from tkinter.filedialog import askdirectory
 
 import client.mem
 from protocol.protocol import *
@@ -11,6 +13,7 @@ class MainInterface(tk.Frame):
         self.master = master
         self.client = client
         self.createForm()
+        master.protocol("WM_DELETE_WINDOW", self.destroy_window)
 
     def createForm(self):
         self.master.title("Bookshelf")
@@ -58,8 +61,36 @@ class MainInterface(tk.Frame):
             return
     
     def read(self):
-        pass
+        """Jump to reading interface
+        """
+        book = self.booklist.get(self.booklist.curselection())
+        read = Toplevel(client.mem.tk_root, takefocus=True)
+        ReaderForm(self.client, book, read)
 
     def download(self):
-        pass
+        """Download the selected book
+        """
+        path = askdirectory()
+        if not path:
+            return
+        bookname = self.booklist.get(self.booklist.curselection())
+        self.client.send(packet(MessageType.download, bookname).to_message())
+        print("[DOWNLOAD] Downloading book %s" % bookname)        
+
+        path += "/" + bookname + ".txt"
+        with open(path, "wb") as f:
+            while True:
+                msg = self.client.recv(config["packet"]["size"])
+                pk = packet().to_packet_no_decode(msg)
+                if pk.mt == MessageType.send_book:
+                    f.write(pk.data)
+                elif pk.mt == MessageType.send_book_done:
+                    break
+                else:
+                    messagebox.showerror("Error", "Download failed.")
+        print("[DOWNLOAD] Download complete.")
+        return
+
+    def destroy_window(self):
+        client.mem.tk_root.destroy()
 

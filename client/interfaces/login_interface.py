@@ -63,6 +63,7 @@ class LoginInterface(tk.Frame):
         # handle success
         if pk.mt == MessageType.login_success:
             print("[LOGIN] Login successful.")
+            client.mem.username = user["username"]
             self.master.destroy()
             bookshelf = Toplevel(client.mem.tk_root, takefocus=True)
             MainInterface(client=self.client, master=bookshelf)
