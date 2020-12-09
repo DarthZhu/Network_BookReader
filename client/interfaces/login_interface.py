@@ -14,6 +14,7 @@ class LoginInterface(tk.Frame):
         self.master = master
         self.client = client
         self.createForm()
+        master.protocol("WM_DELETE_WINDOW", self.destroy_window)
 
     def createForm(self):
         self.master.resizable(width=False, height=False)
@@ -69,4 +70,7 @@ class LoginInterface(tk.Frame):
             MainInterface(client=self.client, master=bookshelf)
             return
 
+    def destroy_window(self):
+        self.client.send(packet(MessageType.disconnect, "").to_message())
+        client.mem.tk_root.destroy()
         

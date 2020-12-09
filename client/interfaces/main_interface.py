@@ -21,22 +21,22 @@ class MainInterface(tk.Frame):
         self.sb = Scrollbar(self)
         self.sb.pack(side=RIGHT, fill=Y)
 
-        self.booklist = Listbox(self, height=15, width=30, yscrollcommand=self.sb.set)
+        self.booklist = Listbox(self, height=10, width=30, yscrollcommand=self.sb.set)
         bklist = self.get_booklist()
         for bkname in bklist:
             self.booklist.insert(END, bkname)
-        self.booklist.pack(side=LEFT, fill=BOTH, expand=YES)
+        self.booklist.pack(side=TOP, fill=BOTH, expand=YES)
         
         self.sb.config(command=self.booklist.yview)
 
         self.buttonframe = Frame(self)
-        self.buttonframe.pack(side=RIGHT, fill=BOTH, expand=YES)
+        self.buttonframe.pack(side=BOTTOM, fill=BOTH, expand=YES)
         # self.refreshbtn = Button(self.buttonframe, text="Refresh", command=self.refresh)
         # self.refreshbtn.pack(side=TOP, fill=Y, expand=YES)
-        self.readbtn = Button(self.buttonframe, text="Read", command=self.read)
-        self.readbtn.pack(side=TOP, fill=Y, expand=YES)
+        self.readbtn = Button(self.buttonframe, text="    Read    ", command=self.read)
+        self.readbtn.pack(side=LEFT, fill=X, expand=YES)
         self.dlbtn = Button(self.buttonframe, text="Download", command=self.download)
-        self.dlbtn.pack(side=TOP, fill=Y, expand=YES)
+        self.dlbtn.pack(side=LEFT, fill=X, expand=YES)
 
         self.pack()
     
@@ -92,5 +92,6 @@ class MainInterface(tk.Frame):
         return
 
     def destroy_window(self):
+        self.client.send(packet(MessageType.disconnect, "").to_message())
         client.mem.tk_root.destroy()
 

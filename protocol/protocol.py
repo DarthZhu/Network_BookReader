@@ -25,6 +25,7 @@ class MessageType(enum.IntEnum):
     require_page = 104
     require_list = 105
     update_bookmark = 106
+    disconnect = 107
 
     # Failure
     login_fail = 201

@@ -9,7 +9,6 @@ from server.client_handler import handler_dispatch
 
 config = get_config()
 
-# TODO
 def handle_client(conn, addr):
     """Handle client data
 
@@ -22,16 +21,16 @@ def handle_client(conn, addr):
     while connected:
         msg = conn.recv(config["packet"]["size"])
         # print(msg)
-        pk = packet(MessageType.init, "").to_packet(msg)
+        pk = packet().to_packet(msg)
+        if pk.mt == MessageType.disconnect:
+            break
         handler_dispatch(conn, pk.mt, pk.data)
-
-
+    conn.close()
+    print("[DISCONNECT] %s:%d disconnected." % (addr[0], addr[1]))
 
 def init_server():
     """Initiate the server and create a thread for every client.
     """
-    # config = get_config()
-    # sel = selectors.DefaultSelector()
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try: 
         s.bind((config["server"]["ip"], config["server"]["port"]))
