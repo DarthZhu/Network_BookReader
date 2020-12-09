@@ -31,8 +31,6 @@ class MainInterface(tk.Frame):
 
         self.buttonframe = Frame(self)
         self.buttonframe.pack(side=BOTTOM, fill=BOTH, expand=YES)
-        # self.refreshbtn = Button(self.buttonframe, text="Refresh", command=self.refresh)
-        # self.refreshbtn.pack(side=TOP, fill=Y, expand=YES)
         self.readbtn = Button(self.buttonframe, text="    Read    ", command=self.read)
         self.readbtn.pack(side=LEFT, fill=X, expand=YES)
         self.dlbtn = Button(self.buttonframe, text="Download", command=self.download)

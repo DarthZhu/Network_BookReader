@@ -13,11 +13,11 @@ class ReaderForm(tk.Frame):
         self.master = master
         self.bookname = bookname
         self.client = client
-        self.page_num = 0 # 当前所在页数
-        self.total_page = 0 # 当前书的总页数
-        self.chapter = [] # 当前书的章节列表
-        self.chap_num = 0 # 当前所在的章数（由章节列表计算得出）
-        self.total_chapter = 0 # 当前书的总章节数（由章节列表计算得出）
+        self.page_num = 0
+        self.total_page = 0
+        self.chapter = []
+        self.chap_num = 0
+        self.total_chapter = 0
         self.createForm()
         master.protocol("WM_DELETE_WINDOW", self.update_bookmark)
 
@@ -123,11 +123,18 @@ class ReaderForm(tk.Frame):
         return
 
     def ask_chap(self):
+        """Ask client to input the chapter to jump.
+
+        Returns:
+            chap_name: chapter name to jump
+        """
         dialog = ChapterList(self.chapter)
         self.wait_window(dialog)
         return dialog.chap_name
 
     def jump_chapter(self):
+        """Jump to the chapter page.
+        """
         chap_name = self.ask_chap()
         if chap_name is None:
             return
@@ -153,6 +160,8 @@ class ReaderForm(tk.Frame):
                 return
 
     def jump_page(self):
+        """Jump to the required page.
+        """
         self.page_num = askinteger('Jump page', 'Page', initialvalue=self.page_num+1, maxvalue=self.total_page + 1, minvalue=1) - 1
         self.client.send(packet(MessageType.require_page, self.bookname + ' ' + str(self.page_num)).to_message())
         msg = self.client.recv(config["packet"]["size"])
@@ -173,6 +182,8 @@ class ReaderForm(tk.Frame):
 
 
     def previous_chapter(self):
+        """Turn to previous chapter page.
+        """
         if self.chap_num == 0:
             messagebox.showwarning('Warning','No previous chapter.')
             return
@@ -196,6 +207,8 @@ class ReaderForm(tk.Frame):
         return
 
     def previous_page(self):
+        """Turn to the previous page.
+        """
         if self.page_num == 0:
             messagebox.showwarning('Warning','No previous page.')
             return
@@ -219,6 +232,8 @@ class ReaderForm(tk.Frame):
         return
 
     def next_page(self):
+        """Turn to next page.
+        """
         if self.page_num == self.total_page:
             messagebox.showwarning('Warning','No next page.')
             return
@@ -242,6 +257,8 @@ class ReaderForm(tk.Frame):
         return
 
     def next_chapter(self):
+        """Turn to next chapter page.
+        """
         if self.chap_num >= self.total_chapter - 1:
             messagebox.showwarning('Warning','No next chapter.')
             return
@@ -265,10 +282,14 @@ class ReaderForm(tk.Frame):
         return
     
     def update_bookmark(self):
+        """Update bookmark when closing the window.
+           A substitute for destroy_window().
+        """
         self.client.send(packet(MessageType.update_bookmark, client.mem.username + ' ' + self.bookname + ' ' + str(self.page_num)).to_message())
         self.master.destroy()
         return
 
+"""Chapter list UI"""
 class ChapterList(tk.Toplevel):
     def __init__(self, chapter):
         super().__init__()

@@ -12,6 +12,5 @@
 + protocol
   + header
     + MessageType 
-    + RemainingPacket
   + data
     + length

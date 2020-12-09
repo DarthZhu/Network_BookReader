@@ -1,5 +1,4 @@
 import socket
-# import selectors
 import threading
 import sys
 
@@ -20,7 +19,6 @@ def handle_client(conn, addr):
     connected = True
     while connected:
         msg = conn.recv(config["packet"]["size"])
-        # print(msg)
         pk = packet().to_packet(msg)
         if pk.mt == MessageType.disconnect:
             break

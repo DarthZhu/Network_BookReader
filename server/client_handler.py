@@ -7,8 +7,13 @@ from utils import get_bookmarks, get_users
 
 ONE_PAGE_WORDS = 1000
 
-#TODO
 def login(conn, data):
+    """Handle client request login and handle multiple failures.
+
+    Args:
+        conn (socket.socket): socket connected to client.
+        data (string): data in packet received.
+    """
     data = eval(data)
     username = data["username"]
     password = data["password"]
@@ -30,6 +35,12 @@ def login(conn, data):
     return
 
 def require_list(conn, data):
+    """Handle client request require_list and send booklist to the client.
+
+    Args:
+        conn (socket.socket): socket connected to client.
+        data (string): data in packet received.
+    """
     data = ""
     booklist = os.listdir("./server/books")
     for bookname in booklist:
@@ -42,6 +53,12 @@ def require_list(conn, data):
     print("[SENDING] Booklist sent.")
 
 def download(conn, data):
+    """Handle client request download and send book in bytes to client.
+
+    Args:
+        conn (socket.socket): socket connected to client.
+        data (string): data in packet received.
+    """
     bookname = data
     path = "./server/books/" + bookname + ".txt"
     with open(path, "rb") as f:
@@ -55,8 +72,14 @@ def download(conn, data):
     conn.send(packet(mt=MessageType.send_book_done, data="").to_message())
     print("[SENDBOOK] Send book done.")
         
-
 def send_page(conn, bookname, page_num):
+    """Utility function to send page to the client.
+
+    Args:
+        conn (socket.socket): socket connected to client.
+        bookname (string): book client required.
+        page_num (int): page number required in bookname.
+    """
     path = "./server/books/" + bookname + ".txt"
     with open(path, "r", encoding='utf-8') as f:
         page_words = ONE_PAGE_WORDS
@@ -89,6 +112,13 @@ def send_page(conn, bookname, page_num):
     return
 
 def read(conn, data):
+    """Handle client request read.
+    Get page from bookmarks and send chapter list, total page and page required.
+
+    Args:
+        conn (socket.socket): socket connected to client.
+        data (string): data in packet received.
+    """
     info = eval(data)
     username = info["username"]
     bookname = info["bookname"]
@@ -140,6 +170,12 @@ def read(conn, data):
     send_page(conn, bookname, page_num)
 
 def require_page(conn, data):
+    """Handle client request require_page and use utility function send_page to send.
+
+    Args:
+        conn (socket.socket): socket connected to client.
+        data (string): data in packet received.
+    """
     data = data.split(" ")
     bookname = data[0]
     page_num = int(data[1])
@@ -147,6 +183,13 @@ def require_page(conn, data):
     return
 
 def update_bookmark(conn, data):
+    """Handle client request update_bookmark.
+    conn is not used because bookmark is stored in server.
+
+    Args:
+        conn (socket.socket): socket connected to client.
+        data (string): data in packet received.
+    """
     bookmark = data.split(" ")
     username = bookmark[0]
     bookname = bookmark[1]
@@ -172,9 +215,14 @@ def update_bookmark(conn, data):
         users = '\n'.join(users) + '\n'
         f.write(users)
 
-
-
 def handler_dispatch(conn, mt, data):
+    """Dispatch handler based on MessageType.
+
+    Args:
+        conn (socket.socket): socket connected to client.
+        mt (MessageType): MessageType received from client.
+        data (string): data in packet received.
+    """
     handler = {
         MessageType.login: login,
         MessageType.download: download,
@@ -185,4 +233,3 @@ def handler_dispatch(conn, mt, data):
     }
     func = handler.get(mt)
     func(conn, data)
-

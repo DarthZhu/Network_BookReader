@@ -42,6 +42,8 @@ class LoginInterface(tk.Frame):
         self.pack()
     
     def action_login(self):
+        """Send and receive login info.
+        """
         # send information to server
         user = {}
         user["username"] = self.username.get()
@@ -71,6 +73,8 @@ class LoginInterface(tk.Frame):
             return
 
     def destroy_window(self):
+        """Close window and send disconnect info to server.
+        """
         self.client.send(packet(MessageType.disconnect, "").to_message())
         client.mem.tk_root.destroy()
         
