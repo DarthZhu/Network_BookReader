@@ -2,7 +2,7 @@
 import os
 import math
 
-from protocol.protocol import *
+from protocol import *
 from utils import get_bookmarks, get_users
 
 ONE_PAGE_WORDS = 1000

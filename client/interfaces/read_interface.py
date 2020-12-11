@@ -4,7 +4,7 @@ from tkinter import messagebox
 from tkinter.simpledialog import askinteger
 import ast
 
-from protocol.protocol import *
+from protocol import *
 import client.mem
 
 class ReaderForm(tk.Frame):

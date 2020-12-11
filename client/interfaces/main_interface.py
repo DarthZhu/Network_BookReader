@@ -5,7 +5,7 @@ from tkinter import messagebox
 from tkinter.filedialog import askdirectory
 
 import client.mem
-from protocol.protocol import *
+from protocol import *
 
 class MainInterface(tk.Frame):
     def __init__(self, client, master=None):

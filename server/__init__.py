@@ -3,7 +3,7 @@ import threading
 import sys
 
 from utils import get_config
-from protocol.protocol import *
+from protocol import *
 from server.client_handler import handler_dispatch
 
 config = get_config()

@@ -2,7 +2,7 @@ import socket
 import sys
 import tkinter as tk
 
-from protocol.protocol import *
+from protocol import *
 from utils import get_config
 from client.interfaces.login_interface import LoginInterface
 import client.mem as mem

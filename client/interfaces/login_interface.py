@@ -1,4 +1,4 @@
-from protocol.protocol import MessageType, packet
+from protocol import MessageType, packet
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
